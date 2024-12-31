@@ -5,6 +5,7 @@ const PORT = 6000;
 // middleware 
 app.use(express.json());
 
+
 // data
 const books = [
     { id: 1, title: "1984", author: "George Orwell" },
@@ -49,6 +50,29 @@ app.get("books/:id", (req, res) => {
         return res.status(404).json({ error: "Book not found" });
     }
 });
+
+app.put("books/:id", (req, res) => {
+    // extract the id from the route parameter
+    const { id } = req.params;
+    // extract theh title and author from the req body 
+    const { title, author } = req.body;
+
+    // find the book with the id from the parameter
+    const book = books.find((b) => b.id === parseInt(id));
+    // if theres to book, print out book not found
+    if (!book) {
+        return res.status(404).json({ error: "Book not found" });
+    }
+
+    // Update the book's properties
+    if (title) book.title = title;
+    if (author) book.author = author;
+   
+    // Respond with the updated book
+    res.status(200).json({ message: "Book updated successfully", book });
+})
+
+
 
 // Start server
 app.listen(PORT, () => {
